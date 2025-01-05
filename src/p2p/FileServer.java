@@ -38,6 +38,7 @@ public class FileServer {
     public void runServer() {
         try {
             socket = new ServerSocket();
+            socket.bind(new InetSocketAddress(port));
             System.out.println("Server listening on port " + port);
             
             while(isRunning) {
