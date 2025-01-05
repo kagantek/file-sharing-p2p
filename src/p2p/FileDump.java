@@ -1,4 +1,4 @@
-package test;
+package p2p;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.util.Random;
 
 public class FileDump {
-	public static void main(String[] args) throws Exception {
+	public void createFile() throws Exception {
 		File file = new File("fileToSend.txt");
 		BufferedWriter myFile = new BufferedWriter(new FileWriter(file));
 		Random r = new Random();
