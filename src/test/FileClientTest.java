@@ -13,7 +13,7 @@ public class FileClientTest {
 				int a = Integer.parseInt(args[2]);
 				System.out.println("Creating " + a + " thread(s)...");
 				for (int i = 0; i < a; i++) {
-					new FileClient(args[0], Integer.parseInt(args[1]), "fileToReceive" + (i + 1)).start();
+					new FileClient(args[0], Integer.parseInt(args[1]), "fileToReceive" + (i + 1) + ".txt").start();
 				}
 			}
 		} catch (Exception e) {
