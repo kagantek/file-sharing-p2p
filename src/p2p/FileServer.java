@@ -7,7 +7,6 @@ import java.net.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-
 //FileServer class will be handling all the connections which will take place in FileServerThread class. 
 public class FileServer {
     private Peer peer;

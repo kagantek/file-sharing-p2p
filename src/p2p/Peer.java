@@ -1,11 +1,11 @@
 package p2p;
 
+//Kagan Tek - 20210702027 - P2P File Sharing Project - Yeditepe University CSE471 Course
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-//Kagan Tek - 20210702027 - P2P File Sharing Project - Yeditepe University CSE471 Course
 
 //Class needed to manage threads, store states such as connected/disconnected, shared folders etc.
 //Will also act as an API for the upcoming GUI, keep the project safe and modularized.
@@ -46,6 +46,8 @@ public class Peer {
         return peers;
     }
 
+
+    //When the connect button in gui gets clicked this function will run
     public void connect() {
         if(connected) {
             System.out.println("Already connected to network at port: " + port);

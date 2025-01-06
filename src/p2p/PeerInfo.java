@@ -1,5 +1,7 @@
 package p2p;
 
+//Kagan Tek - 20210702027 - P2P File Sharing Project - Yeditepe University CSE471 Course
+
 public class PeerInfo {
     private String nodeId;
     private String ip;
