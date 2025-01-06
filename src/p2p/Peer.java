@@ -36,10 +36,12 @@ public class Peer {
 
     public void setShared(File shared) {
         this.shared = shared;
+        gui.log("Shared folder set to" + shared.getAbsolutePath());
     }
 
     public void setDownload(File download) {
         this.download = download;
+        gui.log("Download folder set to" + download.getAbsolutePath());
     }
 
     public Map<String, PeerInfo> getPeer() {
@@ -50,10 +52,10 @@ public class Peer {
     //When the connect button in gui gets clicked this function will run
     public void connect() {
         if(connected) {
-            System.out.println("Already connected to network at port: " + port);
+            gui.log("Already connected to network at port: " + port);
             return;
         }
-        System.out.println("Connecting to network at port: " + port + "...");
+        gui.log("Connecting to network at port: " + port + "...");
 
         //Start server
         server = new FileServer(this, port);
@@ -68,16 +70,16 @@ public class Peer {
         broadcast.start();
 
         connected = true;
-        System.out.println("Connected. Listening for peers on port: " + port);
+        gui.log("Connected. Listening for peers on port: " + port);
     }
 
-    public void disconnected() throws IOException {
+    public void disconnect() throws IOException {
         if(!connected) {
-            System.out.println("Not connected.");
+            gui.log("Not connected.");
             return;
         }
 
-        System.out.println("Disconnecting from network...");
+        gui.log("Disconnecting from network...");
         if(server != null) {
             server.stopServer();
         }
@@ -91,12 +93,15 @@ public class Peer {
         }
 
         connected = false;
-        System.out.println("Disconnected from network.");
+        gui.log("Disconnected from network.");
     }
 
     //When a peer gets discovered they get added to the map
     public void addPeer(String nodeId, PeerInfo info) {
-        peers.put(nodeId, info);
+        if(!peers.containsKey(nodeId)) {
+            peers.put(nodeId, info);
+            gui.log("Discovered new peer: " + nodeId + " => " + info);
+        }
     }
 
     public void updatePeer(String nodeId, PeerInfo info) {

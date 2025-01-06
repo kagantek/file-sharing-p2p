@@ -21,8 +21,8 @@ public class FileServerThread implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("Server thread " + connSocket.getInetAddress().getHostAddress() + " connected.");
-            System.out.println(">>> Sending data...");
+            peer.gui.log("Server thread " + connSocket.getInetAddress().getHostAddress() + " connected.");
+            peer.gui.log(">>> Sending data...");
 			File file = new File("fileToSend.txt");
 
 			RandomAccessFile raf = new RandomAccessFile(file, "r");
@@ -56,7 +56,7 @@ public class FileServerThread implements Runnable {
 					}
 				}
 			}
-			System.out.println(">>> Sent all chunks to " + connSocket.getInetAddress().getHostAddress() + "...");
+			peer.gui.log(">>> Sent all chunks to " + connSocket.getInetAddress().getHostAddress() + "...");
 			raf.close();
 			dOS.writeInt(-1);
 			dOS.close();

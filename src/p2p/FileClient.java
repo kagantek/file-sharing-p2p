@@ -31,33 +31,32 @@ public class FileClient extends Thread {
 			}
 			RandomAccessFile raf = new RandomAccessFile(file, "rw");
 			Socket socket = new Socket(ip, port);
-			System.out.println(getName() + " has connected to server...");
+			peer.gui.log(getName() + " has connected to server...");
 			DataInputStream dis = new DataInputStream(socket.getInputStream());
 			DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 			int length = dis.readInt();
 	
-			System.out.println(getName() + " has read " + length + " for fileLength...");
+			peer.gui.log(getName() + " has read " + length + " for fileLength...");
 			raf.setLength(length);
 
 			int i;
 			while ((i = dis.readInt()) != -1) {
-				System.out.println(getName() + " has read " + i + " for chunkID...");
+				peer.gui.log(getName() + " has read " + i + " for chunkID...");
 				raf.seek(i * 256000);
 				int chunkLength = dis.readInt();
-				System.out.println(getName() + " has read " + chunkLength + " for chunkSize...");
+				peer.gui.log(getName() + " has read " + chunkLength + " for chunkSize...");
 				byte[] toReceive = new byte[chunkLength];
 				dis.readFully(toReceive);
-				System.out.println(getName() + " has read " + chunkLength + " bytes for chunkID " + i + "...");
+				peer.gui.log(getName() + " has read " + chunkLength + " bytes for chunkID " + i + "...");
 				raf.write(toReceive);
 				dos.writeInt(i);
-				System.out.println(getName() + " has sent " + i + " for ACK...");
+				peer.gui.log(getName() + " has sent " + i + " for ACK...");
 			}
-			System.out.println(getName() + " has read " + i + " for chunkID...");
+			peer.gui.log(getName() + " has read " + i + " for chunkID...");
 			raf.close();
 			socket.close();
 		} catch (Exception e) {
-			System.out.println("java -jar FileClient.jar <IP> <PORT> <number>\r\n"
-					+ "Where <IP> is a string, <PORT> is a number and <number> represents concurrent file downloads.");
+			e.printStackTrace();
 		}
 	}
 

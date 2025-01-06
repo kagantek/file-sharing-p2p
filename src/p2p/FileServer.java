@@ -38,7 +38,7 @@ public class FileServer {
         try {
             socket = new ServerSocket();
             socket.bind(new InetSocketAddress(port));
-            System.out.println("Server listening on port " + port);
+            peer.gui.log("Server listening on port " + port);
             
             while(isRunning) {
                 try {
@@ -51,7 +51,7 @@ public class FileServer {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("Server stopped.");
+            peer.gui.log("Server stopped.");
         }
         return;
     }
