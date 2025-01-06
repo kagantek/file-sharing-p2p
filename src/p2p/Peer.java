@@ -94,7 +94,12 @@ public class Peer {
         System.out.println("Disconnected from network.");
     }
 
+    //When a peer gets discovered they get added to the map
     public void addPeer(String nodeId, PeerInfo info) {
+        peers.put(nodeId, info);
+    }
+
+    public void updatePeer(String nodeId, PeerInfo info) {
         peers.put(nodeId, info);
     }
 
