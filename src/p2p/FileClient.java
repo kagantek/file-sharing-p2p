@@ -58,6 +58,7 @@ public class FileClient extends Thread {
 			if (length == -1) {
 				peer.gui.log("FileClient Server says file not found: " + fileName);
 				socket.close();
+				raf.close();
 				return;
 			}
 

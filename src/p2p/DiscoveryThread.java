@@ -4,8 +4,6 @@ package p2p;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.util.UUID;
 
 public class DiscoveryThread extends Thread {
     
