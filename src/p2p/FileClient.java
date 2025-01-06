@@ -15,10 +15,11 @@ public class FileClient extends Thread {
     private Peer peer;
     private String fileName;
 
-	public FileClient(String ip, int port, String name) {
+	public FileClient(Peer peer, String ip, int port, String name, String fileName) {
 		super(name); //assigns a name to the thread
 		this.ip = ip; //servers IP
 		this.port = port; //servers port
+		this.fileName = fileName;
 	}
 
 	@Override
