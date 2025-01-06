@@ -6,10 +6,13 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import p2p.FileDump;
 import p2p.FileServer;
+import p2p.Gui;
 import p2p.Peer;
 
 public class FileServerTest {
     public static void main(String[] args) {
+        Gui gui = new Gui(); //Dummy class at the moment
+        
         int port = 6789;
 
         FileDump dump = new FileDump();
@@ -22,7 +25,7 @@ public class FileServerTest {
             System.out.println("File generation failed (but continuing).");
         }
 
-        Peer peer = new Peer(); 
+        Peer peer = new Peer(gui); 
 
         FileServer server = new FileServer(peer, port);
 

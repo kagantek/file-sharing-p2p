@@ -29,31 +29,31 @@ public class FileClient extends Thread {
 			if (!file.exists()) {
 				file.createNewFile();
 			}
-			RandomAccessFile rAF = new RandomAccessFile(file, "rw");
+			RandomAccessFile raf = new RandomAccessFile(file, "rw");
 			Socket socket = new Socket(ip, port);
 			System.out.println(getName() + " has connected to server...");
-			DataInputStream dIS = new DataInputStream(socket.getInputStream());
-			DataOutputStream dOS = new DataOutputStream(socket.getOutputStream());
-			int length = dIS.readInt();
-			//700 byte
+			DataInputStream dis = new DataInputStream(socket.getInputStream());
+			DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+			int length = dis.readInt();
+	
 			System.out.println(getName() + " has read " + length + " for fileLength...");
-			rAF.setLength(length);
-			//file length = 700 byte
+			raf.setLength(length);
+
 			int i;
-			while ((i = dIS.readInt()) != -1) {
+			while ((i = dis.readInt()) != -1) {
 				System.out.println(getName() + " has read " + i + " for chunkID...");
-				rAF.seek(i * 256000);
-				int chunkLength = dIS.readInt();
+				raf.seek(i * 256000);
+				int chunkLength = dis.readInt();
 				System.out.println(getName() + " has read " + chunkLength + " for chunkSize...");
 				byte[] toReceive = new byte[chunkLength];
-				dIS.readFully(toReceive);
+				dis.readFully(toReceive);
 				System.out.println(getName() + " has read " + chunkLength + " bytes for chunkID " + i + "...");
-				rAF.write(toReceive);
-				dOS.writeInt(i);
+				raf.write(toReceive);
+				dos.writeInt(i);
 				System.out.println(getName() + " has sent " + i + " for ACK...");
 			}
 			System.out.println(getName() + " has read " + i + " for chunkID...");
-			rAF.close();
+			raf.close();
 			socket.close();
 		} catch (Exception e) {
 			System.out.println("java -jar FileClient.jar <IP> <PORT> <number>\r\n"
