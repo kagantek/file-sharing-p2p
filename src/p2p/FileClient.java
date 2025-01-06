@@ -15,49 +15,78 @@ public class FileClient extends Thread {
     private Peer peer;
     private String fileName;
 
-	public FileClient(Peer peer, String ip, int port, String name, String fileName) {
-		super(name); //assigns a name to the thread
-		this.ip = ip; //servers IP
-		this.port = port; //servers port
+	public FileClient(Peer peer, String ip, int port, String fileName) {
+		super("FileClientThread");
+		this.peer = peer;
+		this.ip = ip;
+		this.port = port;
 		this.fileName = fileName;
 	}
 
 	@Override
 	public void run() {
 		try {
-			File file = new File(getName());
-			if (!file.exists()) {
-				file.createNewFile();
+			
+			//Creating destination for file to get into while downloaded
+			File destFolder = peer.getDownload();
+			if (destFolder == null) {
+				peer.gui.log("FileClient No download folder set, using current dir");
+				destFolder = new File(".");
 			}
-			RandomAccessFile raf = new RandomAccessFile(file, "rw");
+
+			File outFile = new File(destFolder, fileName);
+			peer.gui.log("FileClient Creating local file: " + outFile.getAbsolutePath());
+			if (!outFile.exists()) {
+				outFile.createNewFile();
+			}
+
+			RandomAccessFile raf = new RandomAccessFile(outFile, "rw");
+			
+			// Connect
 			Socket socket = new Socket(ip, port);
-			peer.gui.log(getName() + " has connected to server...");
-			DataInputStream dis = new DataInputStream(socket.getInputStream());
+			peer.gui.log("[FileClient] Connected to server " + ip + ":" + port);
+
 			DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+			DataInputStream dis = new DataInputStream(socket.getInputStream());
+
+			// Send download command
+			String requestCommand = "REQUEST|" + fileName;
+			dos.writeUTF(requestCommand);
+			dos.flush();
+
 			int length = dis.readInt();
-	
-			peer.gui.log(getName() + " has read " + length + " for fileLength...");
+			if (length == -1) {
+				peer.gui.log("FileClient Server says file not found: " + fileName);
+				socket.close();
+				return;
+			}
+
+			peer.gui.log("FileClient File size: " + length);
 			raf.setLength(length);
 
+			//Write file to download path
 			int i;
 			while ((i = dis.readInt()) != -1) {
-				peer.gui.log(getName() + " has read " + i + " for chunkID...");
-				raf.seek(i * 256000);
 				int chunkLength = dis.readInt();
-				peer.gui.log(getName() + " has read " + chunkLength + " for chunkSize...");
-				byte[] toReceive = new byte[chunkLength];
-				dis.readFully(toReceive);
-				peer.gui.log(getName() + " has read " + chunkLength + " bytes for chunkID " + i + "...");
-				raf.write(toReceive);
+				byte[] receive = new byte[chunkLength];
+				dis.readFully(receive);
+
+				raf.seek((long)i * 256000);
+				raf.write(receive);
+
+				// ACK
 				dos.writeInt(i);
-				peer.gui.log(getName() + " has sent " + i + " for ACK...");
+				dos.flush();
 			}
-			peer.gui.log(getName() + " has read " + i + " for chunkID...");
+
+			peer.gui.log("FileClient Download complete for file: " + fileName);
 			raf.close();
+			dis.close();
+			dos.close();
 			socket.close();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
 }
